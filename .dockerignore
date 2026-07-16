@@ -1,0 +1,13 @@
+/node_modules
+/vendor
+/public/storage
+/storage
+/bootstrap/cache
+.git
+.idea
+.commandcode
+npm-debug.log
+Dockerfile
+docker-compose.yml
+**/.env
+**/.env.example

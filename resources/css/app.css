@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Urbanist', sans-serif;
+        letter-spacing: -0.02em;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-8 py-4 bg-emerald-600 text-white font-bold rounded-2xl 
+               transition-all duration-300 shadow-lg shadow-emerald-600/25 
+               hover:bg-emerald-500 hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5 hover:scale-[1.02]
+               active:scale-[0.98] active:translate-y-0;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-8 py-4 bg-blue-900 text-white font-bold rounded-2xl 
+               transition-all duration-300 hover:bg-blue-800 hover:-translate-y-0.5 hover:scale-[1.02]
+               active:scale-[0.98];
+    }
+
+    .section-padding {
+        @apply px-4 py-20 sm:px-6 lg:px-8 lg:py-28;
+    }
+
+    .container-max {
+        @apply max-w-7xl mx-auto;
+    }
+
+    .glass {
+        @apply bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl shadow-black/5;
+    }
+
+    .glass-dark {
+        @apply bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/10;
+    }
+
+    .bento-card {
+        @apply rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1;
+    }
+
+    .mask-blob {
+        clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+    }
+
+    .mask-diamond {
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .mask-arch {
+        clip-path: ellipse(50% 50% at 50% 50%);
+    }
+
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-blue-900 to-emerald-600;
+    }
+}
+
+/* AOS overrides */
+[data-aos] {
+    transition-property: transform, opacity;
+}
+
+/* Smooth image loading */
+img {
+    transition: opacity 0.3s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 3px;
+}
