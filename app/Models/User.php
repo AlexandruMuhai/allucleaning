@@ -17,6 +17,11 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'hourly_rate',
+        'photo',
+        'krk_verified',
+        'krk_verified_at',
+        'krk_document_path',
     ];
 
     protected $hidden = [
@@ -30,7 +35,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => Role::class,
+            'hourly_rate' => 'decimal:2',
+            'krk_verified' => 'boolean',
+            'krk_verified_at' => 'datetime',
         ];
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo ? asset('storage/' . $this->photo) : null;
+    }
+
+    public function getInitialAttribute(): string
+    {
+        return mb_substr($this->name, 0, 1);
+    }
+
+    public function isKrkVerified(): bool
+    {
+        return $this->krk_verified;
     }
 
     public function isAdministrator(): bool

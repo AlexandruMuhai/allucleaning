@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('locations', function (Blueprint $table) {
+            $table->decimal('latitude', 10, 8)->nullable()->after('is_active');
+            $table->decimal('longitude', 11, 8)->nullable()->after('latitude');
+            $table->decimal('monthly_revenue', 10, 2)->nullable()->after('longitude');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->decimal('hourly_rate', 8, 2)->nullable()->after('role');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('locations', function (Blueprint $table) {
+            $table->dropColumn(['latitude', 'longitude', 'monthly_revenue']);
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('hourly_rate');
+        });
+    }
+};

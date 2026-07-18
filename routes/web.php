@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\QrPassportController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\CleanLogController;
 use App\Http\Controllers\Admin\CleaningJobController;
+use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\ScheduleTemplateController;
 use App\Http\Controllers\Admin\IssueReportController;
 use App\Http\Controllers\ContactController;
@@ -86,6 +87,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/jobs/{job}/employee', [CleaningJobController::class, 'showForEmployee'])->name('jobs.employee');
         Route::post('/jobs/{job}/start', [CleaningJobController::class, 'start'])->name('jobs.start');
         Route::post('/jobs/{job}/complete', [CleaningJobController::class, 'complete'])->name('jobs.complete');
+
+        // Grafik tygodniowy (admin)
+        Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule.index');
+        Route::get('/schedule/events', [ScheduleController::class, 'events'])->name('schedule.events');
+        Route::get('/schedule/resources', [ScheduleController::class, 'resources'])->name('schedule.resources');
+        Route::post('/schedule/check-conflicts', [ScheduleController::class, 'checkConflicts'])->name('schedule.conflicts');
+        Route::post('/schedule/{job}/reassign', [ScheduleController::class, 'reassign'])->name('schedule.reassign');
+        Route::put('/schedule/{job}/time', [ScheduleController::class, 'updateTime'])->name('schedule.updateTime');
     });
 
     // ── Tylko admin ──

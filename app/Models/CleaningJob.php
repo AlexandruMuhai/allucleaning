@@ -21,18 +21,71 @@ class CleaningJob extends Model
         'employee_id',
         'scheduled_date',
         'scheduled_time',
+        'scheduled_duration_minutes',
         'status',
         'started_at',
+        'start_latitude',
+        'start_longitude',
         'completed_at',
+        'end_latitude',
+        'end_longitude',
         'photo_path',
         'notes',
     ];
 
     protected $casts = [
         'scheduled_date' => 'date',
+        'scheduled_time' => 'string',
+        'scheduled_duration_minutes' => 'integer',
         'started_at' => 'datetime',
         'completed_at' => 'datetime',
+        'start_latitude' => 'decimal:8',
+        'start_longitude' => 'decimal:8',
+        'end_latitude' => 'decimal:8',
+        'end_longitude' => 'decimal:8',
     ];
+
+    public function getScheduleStartAttribute(): \Carbon\Carbon
+    {
+        return $this->scheduled_date->copy()->setTimeFromTimeString($this->scheduled_time);
+    }
+
+    public function getScheduleEndAttribute(): \Carbon\Carbon
+    {
+        return $this->schedule_start->copy()->addMinutes($this->scheduled_duration_minutes ?? 120);
+    }
+
+    public function getDurationMinutesAttribute(): ?int
+    {
+        if (! $this->started_at || ! $this->completed_at) {
+            return null;
+        }
+
+        return (int) $this->started_at->diffInMinutes($this->completed_at);
+    }
+
+    public function getDurationLabelAttribute(): ?string
+    {
+        $minutes = $this->duration_minutes;
+
+        if ($minutes === null) {
+            return null;
+        }
+
+        $hours = (int) floor($minutes / 60);
+        $mins = $minutes % 60;
+
+        return $hours > 0 ? "{$hours}h {$mins}m" : "{$mins}m";
+    }
+
+    public function getEarningsAttribute(): ?float
+    {
+        if (! $this->employee?->hourly_rate || ! $this->duration_minutes) {
+            return null;
+        }
+
+        return round(($this->duration_minutes / 60) * $this->employee->hourly_rate, 2);
+    }
 
     public function location(): BelongsTo
     {

@@ -127,9 +127,9 @@ class CleaningJobController extends Controller
     }
 
     /**
-     * Pracownik: rozpoczęcie zlecenia
+     * Pracownik: rozpoczęcie zlecenia (z walidacją GPS)
      */
-    public function start(CleaningJob $job): RedirectResponse
+    public function start(Request $request, CleaningJob $job): RedirectResponse
     {
         $this->authorize('view', $job);
 
@@ -137,12 +137,55 @@ class CleaningJobController extends Controller
             return back()->with('error', 'To zlecenie nie może zostać rozpoczęte.');
         }
 
-        $job->update([
+        $location = $job->location;
+        $gpsData = [];
+
+        if ($location?->latitude && $location?->longitude) {
+            $data = $request->validate([
+                'user_lat' => ['required', 'numeric', 'between:-90,90'],
+                'user_lng' => ['required', 'numeric', 'between:-180,180'],
+            ]);
+
+            $distance = $this->haversine(
+                $data['user_lat'], $data['user_lng'],
+                $location->latitude, $location->longitude
+            );
+
+            if ($distance > 50) {
+                return back()->withErrors([
+                    'gps' => 'Jesteś za daleko od lokalizacji (' . round($distance) . ' m). Musisz być w odległości maks. 50 m.',
+                ])->withInput();
+            }
+
+            $gpsData = [
+                'start_latitude' => $data['user_lat'],
+                'start_longitude' => $data['user_lng'],
+            ];
+        }
+
+        $job->update(array_merge([
             'status' => CleaningJob::STATUS_IN_PROGRESS,
             'started_at' => now(),
-        ]);
+        ], $gpsData));
 
         return back()->with('success', 'Zlecenie rozpoczęte.');
+    }
+
+    /**
+     * Haversine formula — odległość w metrach między dwoma punktami GPS.
+     */
+    private function haversine(float $lat1, float $lng1, float $lat2, float $lng2): float
+    {
+        $earthRadius = 6371000;
+
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLng = deg2rad($lng2 - $lng1);
+
+        $a = sin($dLat / 2) ** 2
+            + cos(deg2rad($lat1)) * cos(deg2rad($lat2))
+            * sin($dLng / 2) ** 2;
+
+        return $earthRadius * 2 * atan2(sqrt($a), sqrt(1 - $a));
     }
 
     /**
@@ -159,6 +202,8 @@ class CleaningJobController extends Controller
         $data = $request->validate([
             'photo' => ['nullable', 'image', 'max:5120'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            'user_lat' => ['nullable', 'numeric', 'between:-90,90'],
+            'user_lng' => ['nullable', 'numeric', 'between:-180,180'],
         ]);
 
         $photoPath = null;
@@ -166,12 +211,19 @@ class CleaningJobController extends Controller
             $photoPath = $request->file('photo')->store('job-photos', 'public');
         }
 
-        $job->update([
+        $updates = [
             'status' => CleaningJob::STATUS_COMPLETED,
             'completed_at' => now(),
             'photo_path' => $photoPath,
             'notes' => $data['notes'] ?? null,
-        ]);
+        ];
+
+        if (! empty($data['user_lat']) && ! empty($data['user_lng'])) {
+            $updates['end_latitude'] = $data['user_lat'];
+            $updates['end_longitude'] = $data['user_lng'];
+        }
+
+        $job->update($updates);
 
         return back()->with('success', 'Zlecenie zostało oznaczone jako ukończone.');
     }

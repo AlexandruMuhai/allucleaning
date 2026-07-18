@@ -3,6 +3,13 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { initParticleWave } from './particles.js';
 
+// FullCalendar (admin schedule timeline)
+import { Calendar } from '@fullcalendar/core';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import plLocale from '@fullcalendar/core/locales/pl';
+
+window.FullCalendar = { Calendar, resourceTimelinePlugin, plLocale };
+
 document.addEventListener('DOMContentLoaded', () => {
     AOS.init({
         duration: 800,

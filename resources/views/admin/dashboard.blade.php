@@ -1,131 +1,103 @@
 @extends('admin.layout')
-
 @section('title', 'Dashboard')
-@section('header', 'Dashboard')
+@section('header', 'Live Cleaning Feed')
 
 @section('content')
 <div class="space-y-6">
-    {{-- Stat cards --}}
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Użytkownicy</p>
-                    <p class="mt-1 font-display text-3xl font-extrabold text-slate-900">{{ $stats['users'] }}</p>
-                </div>
-                <div class="flex size-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                </div>
-            </div>
+    <div class="flex items-center justify-between">
+        <div>
+            <p class="text-sm text-slate-500">Ostatnio ukończone zlecenia</p>
         </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Administratorzy</p>
-                    <p class="mt-1 font-display text-3xl font-extrabold text-slate-900">{{ $stats['administrators'] }}</p>
-                </div>
-                <div class="flex size-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Pracownicy</p>
-                    <p class="mt-1 font-display text-3xl font-extrabold text-slate-900">{{ $stats['pracownicy'] }}</p>
-                </div>
-                <div class="flex size-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Klienci</p>
-                    <p class="mt-1 font-display text-3xl font-extrabold text-slate-900">{{ $stats['klienci'] }}</p>
-                </div>
-                <div class="flex size-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Zapytania kontaktowe</p>
-                    <p class="mt-1 font-display text-3xl font-extrabold text-slate-900">{{ $stats['contact_requests'] }}</p>
-                </div>
-                <div class="flex size-11 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Nieprzeczytane</p>
-                    <p class="mt-1 font-display text-3xl font-extrabold text-slate-900">{{ $stats['unread_requests'] }}</p>
-                </div>
-                <div class="flex size-11 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                </div>
-            </div>
-        </div>
+        <a href="{{ route('admin.jobs.index') }}" class="text-sm font-semibold text-emerald-600 hover:text-emerald-700">Wszystkie zlecenia →</a>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {{-- Recent users --}}
-        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-                <h2 class="font-display text-base font-bold text-slate-900">Ostatni użytkownicy</h2>
-                <a href="{{ route('admin.users.index') }}" class="text-sm font-medium text-emerald-600 hover:text-emerald-700">Zobacz wszystkich</a>
-            </div>
-            <div class="divide-y divide-slate-100">
-                @forelse ($recentUsers as $user)
-                    <div class="flex items-center gap-3 px-6 py-3">
-                        <div class="flex size-9 items-center justify-center rounded-full bg-slate-900 font-semibold text-white">
-                            {{ substr($user->name, 0, 1) }}
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <p class="truncate text-sm font-semibold text-slate-900">{{ $user->name }}</p>
-                            <p class="truncate text-xs text-slate-500">{{ $user->email }}</p>
-                        </div>
-                        <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">{{ $user->roleLabel() }}</span>
-                    </div>
-                @empty
-                    <p class="px-6 py-6 text-center text-sm text-slate-500">Brak użytkowników.</p>
-                @endforelse
-            </div>
+    @if ($jobs->isEmpty())
+        <div class="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+            <svg class="mx-auto size-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p class="mt-3 text-sm font-medium text-slate-500">Brak ukończonych zleceń.</p>
         </div>
+    @else
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            @foreach ($jobs as $job)
+                @php
+                    $duration = null;
+                    if ($job->started_at && $job->completed_at) {
+                        $minutes = $job->started_at->diffInMinutes($job->completed_at);
+                        $hours = (int) floor($minutes / 60);
+                        $mins = $minutes % 60;
+                        $duration = $hours > 0 ? "{$hours}h {$mins}m" : "{$mins}m";
+                    }
 
-        {{-- Recent contact requests --}}
-        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div class="border-b border-slate-100 px-6 py-4">
-                <h2 class="font-display text-base font-bold text-slate-900">Ostatnie zapytania</h2>
-            </div>
-            <div class="divide-y divide-slate-100">
-                @forelse ($recentRequests as $request)
-                    <div class="flex items-center gap-3 px-6 py-3">
-                        <div class="min-w-0 flex-1">
-                            <p class="truncate text-sm font-semibold text-slate-900">{{ $request->name }}</p>
-                            <p class="truncate text-xs text-slate-500">{{ $request->email }}</p>
+                    $photos = collect();
+                    if ($job->photo_path) {
+                        $photos->push($job->photo_path);
+                    }
+                @endphp
+
+                <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-all hover:shadow-md">
+                    {{-- Header --}}
+                    <div class="border-b border-slate-100 px-5 py-4">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-bold text-slate-900">{{ $job->location?->name ?? 'Bez lokalizacji' }}</p>
+                                <p class="mt-0.5 text-xs text-slate-400">{{ $job->location?->address ?? '' }}</p>
+                            </div>
+                            @if ($duration)
+                                <span class="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">{{ $duration }}</span>
+                            @endif
                         </div>
-                        @if (! $request->is_read)
-                            <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600">Nowe</span>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="px-5 py-4 space-y-3">
+                        {{-- Employee --}}
+                        <div class="flex items-center gap-2.5">
+                            <div class="flex size-7 items-center justify-center rounded-full bg-slate-900 text-[10px] font-bold text-white">
+                                {{ substr($job->employee?->name ?? '?', 0, 1) }}
+                            </div>
+                            <span class="text-sm font-medium text-slate-700">{{ $job->employee?->name ?? 'Nieprzypisany' }}</span>
+                        </div>
+
+                        {{-- Timing --}}
+                        <div class="flex items-center gap-4 text-xs text-slate-500">
+                            @if ($job->started_at)
+                                <span class="flex items-center gap-1">
+                                    <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    Start: {{ $job->started_at->format('H:i') }}
+                                </span>
+                            @endif
+                            @if ($job->completed_at)
+                                <span class="flex items-center gap-1">
+                                    <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    Koniec: {{ $job->completed_at->format('H:i') }}
+                                </span>
+                            @endif
+                        </div>
+
+                        {{-- Photos --}}
+                        @if ($photos->isNotEmpty())
+                            <div class="flex gap-2 overflow-x-auto pb-1">
+                                @foreach ($photos as $photo)
+                                    <a href="{{ asset('storage/' . $photo) }}" target="_blank" class="shrink-0">
+                                        <img src="{{ asset('storage/' . $photo) }}" alt="Zdjęcie" class="h-20 w-20 rounded-xl object-cover ring-1 ring-slate-200 transition-all hover:ring-emerald-400">
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        {{-- Notes --}}
+                        @if ($job->notes)
+                            <p class="text-xs text-slate-500 line-clamp-2">{{ $job->notes }}</p>
                         @endif
                     </div>
-                @empty
-                    <p class="px-6 py-6 text-center text-sm text-slate-500">Brak zapytań.</p>
-                @endforelse
-            </div>
+
+                    {{-- Footer --}}
+                    <div class="border-t border-slate-100 bg-slate-50/50 px-5 py-2.5">
+                        <p class="text-[11px] text-slate-400">{{ $job->completed_at?->translatedFormat('d.m.Y H:i') ?? '' }}</p>
+                    </div>
+                </div>
+            @endforeach
         </div>
-    </div>
+    @endif
 </div>
 @endsection

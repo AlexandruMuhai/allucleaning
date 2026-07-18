@@ -46,6 +46,20 @@
                     <input id="schedule_info" name="schedule_info" value="{{ old('schedule_info', $location->schedule_info) }}" class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
             </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label for="latitude" class="mb-2 block text-sm font-medium text-slate-700">Szerokość GPS</label>
+                    <input id="latitude" type="number" step="any" name="latitude" value="{{ old('latitude', $location->latitude) }}" class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500" placeholder="52.2297">
+                </div>
+                <div>
+                    <label for="longitude" class="mb-2 block text-sm font-medium text-slate-700">Długość GPS</label>
+                    <input id="longitude" type="number" step="any" name="longitude" value="{{ old('longitude', $location->longitude) }}" class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500" placeholder="21.0122">
+                </div>
+                <div>
+                    <label for="monthly_revenue" class="mb-2 block text-sm font-medium text-slate-700">Przychód / mc (zł)</label>
+                    <input id="monthly_revenue" type="number" step="0.01" min="0" name="monthly_revenue" value="{{ old('monthly_revenue', $location->monthly_revenue) }}" class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500" placeholder="0.00">
+                </div>
+            </div>
             <div>
                 <label for="access_code" class="mb-2 block text-sm font-medium text-slate-700">Kod dostępu</label>
                 <input id="access_code" name="access_code" value="{{ old('access_code', $location->access_code) }}" class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500">

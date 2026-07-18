@@ -27,18 +27,35 @@
                 @forelse ($users as $user)
                     <tr class="transition-colors hover:bg-slate-50">
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="flex size-9 items-center justify-center rounded-full bg-slate-900 font-semibold text-white">
-                                    {{ substr($user->name, 0, 1) }}
-                                </div>
+                            <a href="{{ route('admin.users.show', $user) }}" class="flex items-center gap-3">
+                                @if ($user->photo)
+                                    <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="size-9 rounded-full object-cover ring-2 ring-slate-200">
+                                @else
+                                    <div class="flex size-9 items-center justify-center rounded-full bg-slate-900 font-semibold text-white">
+                                        {{ $user->initial }}
+                                    </div>
+                                @endif
                                 <div>
                                     <p class="text-sm font-semibold text-slate-900">{{ $user->name }}</p>
                                     <p class="text-xs text-slate-500">{{ $user->email }}</p>
                                 </div>
-                            </div>
+                            </a>
                         </td>
                         <td class="px-6 py-4">
-                            @include('admin.users.partials.role-badge', ['role' => $user->role])
+                            <div class="flex items-center gap-2">
+                                @include('admin.users.partials.role-badge', ['role' => $user->role])
+                                @if ($user->role->value === 'pracownik')
+                                    @if ($user->isKrkVerified())
+                                        <span class="inline-flex size-5 items-center justify-center rounded-full bg-emerald-100 text-emerald-600" title="KRK zweryfikowany">
+                                            <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                        </span>
+                                    @else
+                                        <span class="inline-flex size-5 items-center justify-center rounded-full bg-slate-100 text-slate-400" title="KRK niezweryfikowany">
+                                            <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        </span>
+                                    @endif
+                                @endif
+                            </div>
                         </td>
                         <td class="px-6 py-4 text-sm text-slate-500">{{ $user->created_at->format('d.m.Y H:i') }}</td>
                         <td class="px-6 py-4">

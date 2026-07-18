@@ -73,6 +73,9 @@ class LocationController extends Controller
             'schedule_info' => ['nullable', 'string', 'max:255'],
             'employees' => ['nullable', 'array'],
             'employees.*' => ['exists:users,id'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'monthly_revenue' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $location = Location::create(array_merge($data, [
@@ -114,6 +117,9 @@ class LocationController extends Controller
             'schedule_info' => ['nullable', 'string', 'max:255'],
             'employees' => ['nullable', 'array'],
             'employees.*' => ['exists:users,id'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'monthly_revenue' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $location->update($data);

@@ -23,6 +23,9 @@ class Location extends Model
         'cleaning_instructions',
         'schedule_info',
         'is_active',
+        'latitude',
+        'longitude',
+        'monthly_revenue',
     ];
 
     protected $casts = [
@@ -30,6 +33,9 @@ class Location extends Model
         'area_sqm' => 'integer',
         'access_code' => 'encrypted',
         'is_active' => 'boolean',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
+        'monthly_revenue' => 'decimal:2',
     ];
 
     public const TYPE_OFFICE = 'office';

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ContactRequest;
+use App\Models\CleaningJob;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -22,18 +22,13 @@ class AdminDashboardController extends Controller
             return redirect()->route('admin.locations.index');
         }
 
-        $stats = [
-            'users' => User::count(),
-            'administrators' => User::where('role', 'administrator')->count(),
-            'pracownicy' => User::where('role', 'pracownik')->count(),
-            'klienci' => User::where('role', 'klient')->count(),
-            'contact_requests' => ContactRequest::count(),
-            'unread_requests' => ContactRequest::where('is_read', false)->count(),
-        ];
+        $jobs = CleaningJob::with(['location', 'employee'])
+            ->where('status', CleaningJob::STATUS_COMPLETED)
+            ->whereNotNull('completed_at')
+            ->latest('completed_at')
+            ->limit(20)
+            ->get();
 
-        $recentUsers = User::latest()->take(5)->get();
-        $recentRequests = ContactRequest::latest()->take(5)->get();
-
-        return view('admin.dashboard', compact('stats', 'recentUsers', 'recentRequests'));
+        return view('admin.dashboard', compact('jobs'));
     }
 }

@@ -2,10 +2,54 @@
 @section('title', $location->name)
 @section('header', $location->name)
 
+@php
+    $completedJobs = $location->cleaningJobs()
+        ->where('status', 'completed')
+        ->whereNotNull('started_at')
+        ->whereNotNull('completed_at')
+        ->with('employee')
+        ->get();
+
+    $totalHours = 0;
+    $laborCost = 0;
+    foreach ($completedJobs as $cj) {
+        $hours = $cj->started_at->diffInMinutes($cj->completed_at) / 60;
+        $totalHours += $hours;
+        if ($cj->employee?->hourly_rate) {
+            $laborCost += $hours * $cj->employee->hourly_rate;
+        }
+    }
+
+    $revenue = $location->monthly_revenue ?? 0;
+    $netProfit = $revenue - $laborCost;
+@endphp
+
 @section('content')
 <div class="space-y-6">
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div class="lg:col-span-2 space-y-6">
+            {{-- Podsumowanie finansowe --}}
+            @if ($revenue > 0 || $laborCost > 0)
+                <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <h3 class="font-display text-base font-bold text-slate-900 mb-4">Podsumowanie finansowe</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="rounded-xl bg-slate-50 p-4 text-center">
+                            <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Przychód / mc</p>
+                            <p class="mt-1 font-display text-xl font-extrabold text-slate-900">{{ number_format($revenue, 2, ',', ' ') }} zł</p>
+                        </div>
+                        <div class="rounded-xl bg-rose-50 p-4 text-center">
+                            <p class="text-xs font-medium uppercase tracking-wider text-rose-400">Koszt pracy</p>
+                            <p class="mt-1 font-display text-xl font-extrabold text-rose-700">{{ number_format($laborCost, 2, ',', ' ') }} zł</p>
+                            <p class="mt-0.5 text-[10px] text-rose-400">{{ number_format($totalHours, 1, ',', ' ') }}h łącznie</p>
+                        </div>
+                        <div class="rounded-xl {{ $netProfit >= 0 ? 'bg-emerald-50' : 'bg-rose-50' }} p-4 text-center">
+                            <p class="text-xs font-medium uppercase tracking-wider {{ $netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400' }}">Zysk netto</p>
+                            <p class="mt-1 font-display text-xl font-extrabold {{ $netProfit >= 0 ? 'text-emerald-700' : 'text-rose-700' }}">{{ number_format($netProfit, 2, ',', ' ') }} zł</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             {{-- Informacje podstawowe --}}
             <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                 <h3 class="font-display text-base font-bold text-slate-900 mb-4">Informacje</h3>
@@ -34,6 +78,12 @@
                         <dt class="text-slate-500">Status</dt>
                         <dd><span class="inline-flex items-center gap-1 text-xs font-medium {{ $location->is_active ? 'text-emerald-600' : 'text-slate-400' }}"><span class="size-1.5 rounded-full {{ $location->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}"></span>{{ $location->is_active ? 'Aktywna' : 'Nieaktywna' }}</span></dd>
                     </div>
+                    @if ($location->latitude && $location->longitude)
+                    <div class="col-span-2">
+                        <dt class="text-slate-500">GPS</dt>
+                        <dd class="font-medium text-slate-900 font-mono text-xs">{{ $location->latitude }}, {{ $location->longitude }}</dd>
+                    </div>
+                    @endif
                 </dl>
             </div>
 
@@ -139,7 +189,7 @@
                 <h3 class="font-display text-base font-bold text-slate-900 mb-3">Przypisani pracownicy</h3>
                 <ul class="text-sm text-slate-700">
                     @forelse ($location->employees as $emp)
-                        <li class="py-1">{{ $emp->name }}</li>
+                        <li class="py-1">{{ $emp->name }}@if ($emp->hourly_rate) <span class="text-xs text-slate-400">· {{ number_format($emp->hourly_rate, 2, ',', ' ') }} zł/h</span>@endif</li>
                     @empty
                         <li class="py-1 text-slate-400">Brak przypisanych.</li>
                     @endforelse
